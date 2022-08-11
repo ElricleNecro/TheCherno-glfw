@@ -1359,6 +1359,16 @@ void _glfwSetWindowDecoratedCocoa(_GLFWwindow* window, GLFWbool enabled)
     } // autoreleasepool
 }
 
+void _glfwSetWindowFloatingCocoa(_GLFWwindow* window, GLFWbool enabled)
+{
+    @autoreleasepool {
+    if (enabled)
+        [window->ns.object setLevel:NSFloatingWindowLevel];
+    else
+        [window->ns.object setLevel:NSNormalWindowLevel];
+    } // autoreleasepool
+}
+
 void _glfwPlatformSetWindowTitlebar(_GLFWwindow* window, GLFWbool enabled)
 {
     // TODO

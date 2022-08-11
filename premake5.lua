@@ -1,29 +1,40 @@
 project "GLFW"
-	kind "StaticLib"
+	kind "SharedLib"
 	language "C"
-	staticruntime "off"
+	staticruntime "on"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	location "build/"
+	targetdir "build/%{cfg.buildcfg}/lib"
 
 	files
 	{
 		"include/GLFW/glfw3.h",
 		"include/GLFW/glfw3native.h",
-		"src/glfw_config.h",
+
 		"src/context.c",
 		"src/init.c",
 		"src/input.c",
+		"src/internal.h",
+		"src/mappings.h",
 		"src/monitor.c",
 
+		"src/platform.h",
+		"src/platform.c",
+
+		"src/vulkan.c",
+
+		"src/window.c",
+
+		"src/egl_context.c",
+
+		"src/osmesa_context.c",
+
+		"src/null_platform.h",
+		"src/null_joystick.h",
 		"src/null_init.c",
-		"src/null_joystick.c",
 		"src/null_monitor.c",
 		"src/null_window.c",
-
-		"src/platform.c",
-		"src/vulkan.c",
-		"src/window.c",
+		"src/null_joystick.c",
 	}
 
 	filter "system:linux"
@@ -49,6 +60,42 @@ project "GLFW"
 		defines
 		{
 			"_GLFW_X11"
+		}
+
+	filter "system:macosx"
+		pic "On"
+
+		cppdialect "gnu++17"
+		staticruntime "On"
+
+		files
+		{
+			"src/cocoa_time.h",
+			"src/cocoa_time.c",
+			"src/cocoa_platform.h",
+			"src/cocoa_joystick.h",
+			"src/cocoa_init.m",
+			"src/cocoa_joystick.m",
+			"src/cocoa_monitor.m",
+			"src/cocoa_window.m",
+
+			"src/posix_thread.h",
+			"src/posix_module.c",
+			"src/posix_thread.c",
+
+			"src/nsgl_context.m",
+		}
+
+		defines
+		{
+			"_GLFW_COCOA"
+		}
+
+		links
+		{
+			"CoreFoundation.framework",
+			"Cocoa.framework",
+			"IOKit.framework",
 		}
 
 	filter "system:windows"
@@ -90,4 +137,4 @@ project "GLFW"
 	filter "configurations:Dist"
 		runtime "Release"
 		optimize "on"
-        symbols "off"
+		symbols "off"
